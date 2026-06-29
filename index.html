@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pump · Live Signals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #080b16;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(249, 115, 22, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 50%);
+            animation: bgFloat 25s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(2deg) scale(1.02); }
+        }
+
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .header-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            height: 150px;
+            background: radial-gradient(ellipse, rgba(249, 115, 22, 0.10) 0%, rgba(251, 191, 36, 0.04) 40%, transparent 70%);
+            filter: blur(50px);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .pump-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f97316 30%, #fbbf24 50%, #f97316 70%, #fbbf24 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerGradient 3s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(251, 191, 36, 0.15);
+            line-height: 1.1;
+            position: relative;
+        }
+
+        @keyframes shimmerGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .pump-sub {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fbbf24;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            opacity: 0.5;
+        }
+
+        .pump-badge {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.08);
+            padding: 4px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(251, 191, 36, 0.10);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .pump-badge i {
+            margin-right: 8px;
+            font-size: 11px;
+            color: #fbbf24;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .status-item .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            animation: pulseDot 1.8s infinite;
+        }
+
+        .status-item .dot.green {
+            background: #34d399;
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.2);
+        }
+
+        .status-item .dot.blue {
+            background: #60a5fa;
+            box-shadow: 0 0 16px rgba(96, 165, 250, 0.2);
+            animation-delay: 0.3s;
+        }
+
+        .status-item .dot.orange {
+            background: #f97316;
+            box-shadow: 0 0 16px rgba(249, 115, 22, 0.2);
+            animation-delay: 0.6s;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .status-item .divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .last-update {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.08);
+            letter-spacing: 1.5px;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(251, 191, 36, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast i {
+            font-size: 18px;
+            color: #34d399;
+        }
+
+        .loading-overlay {
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .loading-overlay i {
+            font-size: 32px;
+            color: #fbbf24;
+            animation: spin 1.2s linear infinite;
+            display: block;
+            margin-bottom: 14px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .token-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            animation: cardSlide 0.5s ease both;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+        }
+
+        .token-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.02), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .token-card::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 29px;
+            padding: 1.5px;
+            background: linear-gradient(
+                135deg,
+                transparent 20%,
+                rgba(251, 191, 36, 0.3) 40%,
+                #fbbf24 50%,
+                rgba(251, 191, 36, 0.3) 60%,
+                transparent 80%
+            );
+            background-size: 300% 300%;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+            animation: borderShimmer 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .token-card:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes borderShimmer {
+            0%, 100% { background-position: 0% 50%; opacity: 0.6; }
+            50% { background-position: 100% 50%; opacity: 1; }
+        }
+
+        .token-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px) scale(1.005);
+            border-color: rgba(251, 191, 36, 0.08);
+            box-shadow: 
+                0 12px 40px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(251, 191, 36, 0.05),
+                0 0 30px rgba(251, 191, 36, 0.02);
+        }
+
+        .token-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .token-card:nth-child(1) { animation-delay: 0.05s; }
+        .token-card:nth-child(2) { animation-delay: 0.10s; }
+        .token-card:nth-child(3) { animation-delay: 0.15s; }
+        .token-card:nth-child(4) { animation-delay: 0.20s; }
+        .token-card:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes cardSlide {
+            0% { opacity: 0; transform: translateX(-16px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .token-avatar {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(145deg, #1a2332, #0d1420);
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .token-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .token-card:hover .token-avatar {
+            transform: scale(1.04) rotate(-3deg);
+            border-color: rgba(251, 191, 36, 0.15);
+        }
+
+        .token-avatar .rank {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .token-avatar .fallback-icon {
+            font-size: 28px;
+        }
+
+        .token-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .token-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .token-name {
+            font-size: 19px;
+            font-weight: 700;
+            color: #fbbf24;
+            letter-spacing: -0.2px;
+        }
+
+        .token-symbol {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(251, 191, 36, 0.5);
+            background: rgba(251, 191, 36, 0.04);
+            padding: 2px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(251, 191, 36, 0.04);
+        }
+
+        .token-address-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 3px;
+        }
+
+        .token-address {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'SF Mono', 'Menlo', monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .token-address i {
+            color: #fbbf24;
+            font-size: 11px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: rgba(251, 191, 36, 0.3);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.06);
+        }
+
+        .copy-btn.copied {
+            color: #34d399;
+        }
+
+        .copy-btn .copy-feedback {
+            font-size: 9px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn.copied .copy-feedback {
+            opacity: 1;
+        }
+
+        /* ===== قیمت با دلار بزرگتر ===== */
+        .token-price {
+            font-family: 'Space Mono', 'Orbitron', monospace;
+            font-size: 30px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-top: 2px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.04);
+        }
+
+        .token-price .price-usd {
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #fbbf24;
+            margin-left: 6px;
+            letter-spacing: 0;
+            opacity: 0.6;
+        }
+
+        /* ===== آمار با اعداد بزرگتر ===== */
+        .token-stats {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', 'Orbitron', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-top: 1px;
+            letter-spacing: -0.3px;
+        }
+
+        .stat-value.change.up {
+            color: #34d399;
+        }
+
+        .stat-value.change.down {
+            color: #f87171;
+        }
+
+        .token-action {
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        .token-action a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(249, 115, 22, 0.04));
+            border: 1px solid rgba(251, 191, 36, 0.12);
+            border-radius: 60px;
+            color: #fbbf24;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.02);
+        }
+
+        .token-action a::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #fbbf24, #f97316, #fbbf24, #f97316);
+            background-size: 300% 300%;
+            border-radius: 62px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .token-action a:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .token-action a::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.06), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .token-action a:hover::after {
+            left: 100%;
+        }
+
+        .token-action a:hover {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(249, 115, 22, 0.06));
+            color: #fcd34d;
+            transform: translateX(-3px) scale(1.02);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.08), 0 0 80px rgba(251, 191, 36, 0.04);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .token-action a i {
+            font-size: 13px;
+            transition: 0.3s ease;
+        }
+
+        .token-action a:hover i {
+            transform: translateX(-5px);
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+        }
+
+        .footer-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fbbf24;
+            letter-spacing: 1px;
+        }
+
+        .footer-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.08);
+            padding: 3px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(52, 211, 153, 0.06);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-divider {
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 4px 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            border-color: rgba(251, 191, 36, 0.15);
+        }
+
+        .social-link.telegram:hover {
+            color: #34a7df;
+            background: rgba(52, 167, 223, 0.06);
+            border-color: rgba(52, 167, 223, 0.15);
+            box-shadow: 0 0 30px rgba(52, 167, 223, 0.04);
+        }
+
+        .social-link.twitter:hover {
+            color: #1da1f2;
+            background: rgba(29, 161, 242, 0.06);
+            border-color: rgba(29, 161, 242, 0.15);
+            box-shadow: 0 0 30px rgba(29, 161, 242, 0.04);
+        }
+
+        .social-link.dextools:hover {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.06);
+            border-color: rgba(251, 191, 36, 0.15);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.04);
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .footer-powered {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .footer-powered span {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        .error-msg {
+            text-align: center;
+            padding: 20px;
+            color: rgba(248, 113, 113, 0.6);
+            font-size: 13px;
+            font-weight: 400;
+            background: rgba(248, 113, 113, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(248, 113, 113, 0.04);
+            margin-top: 12px;
+        }
+
+        .error-msg i {
+            margin-right: 8px;
+            opacity: 0.5;
+        }
+
+        .error-msg small {
+            display: block;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 820px) {
+            .pump-title { font-size: 38px; letter-spacing: 4px; }
+            .token-card { flex-wrap: wrap; padding: 16px 18px; gap: 12px; }
+            .token-stats { gap: 16px; flex: 1 1 100%; justify-content: space-between; }
+            .token-action { margin-left: 0; flex: 1 1 100%; }
+            .token-action a { width: 100%; justify-content: center; padding: 10px; }
+            .token-avatar { width: 52px; height: 52px; min-width: 52px; font-size: 22px; }
+            .token-price { font-size: 26px; }
+            .stat-value { font-size: 17px; }
+            .status-bar { gap: 14px; }
+            .social-link {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            
+            .pump-title { font-size: 26px; letter-spacing: 2px; }
+            .pump-sub { font-size: 11px; letter-spacing: 4px; }
+            .pump-badge { font-size: 10px; padding: 3px 14px; }
+            
+            .token-card { padding: 12px 14px; border-radius: 20px; }
+            .token-name { font-size: 16px; }
+            .stat-value { font-size: 15px; }
+            .token-stats { gap: 12px; }
+            .token-price { font-size: 22px; }
+            .token-avatar { width: 48px; height: 48px; min-width: 48px; font-size: 20px; }
+            
+            .status-item { font-size: 9px; gap: 4px; letter-spacing: 0.5px; }
+            .status-item .divider { display: none; }
+            .status-bar { gap: 8px; }
+            
+            .last-update { font-size: 9px; }
+            
+            .toast { font-size: 12px; padding: 10px 20px; bottom: 20px; }
+            
+            .token-address {
+                font-size: 10px;
+            }
+            
+            .stat-label {
+                font-size: 9px;
+            }
+
+            .footer-title {
+                font-size: 16px;
+            }
+            
+            .footer-text {
+                font-size: 12px;
+            }
+            
+            .footer-powered {
+                font-size: 12px;
+            }
+            
+            .footer-copyright {
+                font-size: 11px;
+            }
+            
+            .social-link {
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
+            }
+            
+            .footer-social {
+                gap: 10px;
+            }
+            
+            .token-card::after {
+                border-radius: 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Address copied!</span>
+    </div>
+
+    <div class="container">
+
+        <div class="header">
+            <div class="header-glow"></div>
+            
+            <div class="pump-title">PUMPING NOW</div>
+            <div class="pump-sub">• live signals •</div>
+            <div class="pump-badge"><i class="fas fa-bolt"></i> VIP Access</div>
+
+            <div class="status-bar">
+                <span class="status-item">
+                    <span class="dot green"></span>
+                    Solana
+                </span>
+                <span class="status-item">
+                    <span class="divider"></span>
+                </span>
+                <span class="status-item">
+                    <span class="dot blue"></span>
+                    24/7 Live
+                </span>
+                <span class="status-item">
+                    <span class="divider"></span>
+                </span>
+                <span class="status-item">
+                    <span class="dot orange"></span>
+                    Pumping
+                </span>
+            </div>
+
+            <div class="last-update" id="updateTime">updating...</div>
+        </div>
+
+        <div id="tokenContainer">
+            <div class="loading-overlay">
+                <i class="fas fa-spinner"></i>
+                Loading live data...
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-logo">🚀</span>
+                    <span class="footer-title">Pump Signals</span>
+                    <span class="footer-badge">Live</span>
+                </div>
+                
+                <div class="footer-info">
+                    <span class="footer-text">Real-time token monitoring on Solana</span>
+                    <span class="footer-divider">•</span>
+                    <span class="footer-text">24/7 Updates</span>
+                </div>
+                
+                <div class="footer-social">
+                    <a href="https://t.me/illuminati300" target="_blank" class="social-link telegram" title="Telegram">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link twitter" title="Twitter/X">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link dextools" title="DexScreener">
+                        <i class="fas fa-chart-line"></i>
+                    </a>
+                </div>
+                
+                <div class="footer-bottom">
+                    <span class="footer-powered">Powered by <span>DexScreener</span></span>
+                    <span class="footer-copyright">© 2026 · Pump Signals</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const TOKENS = [
+            { address: 'BrbTtwbR4e1DoGwt8VeBSmX7XAWW3bHeNtzH74whpump' },
+            { address: '9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump' },
+            { address: '' },
+            { address: '' },
+            { address: '' }
+        ];
+
+        function copyToClipboard(text, element) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Address copied!', element);
+                }).catch(() => {
+                    fallbackCopy(text, element);
+                });
+            } else {
+                fallbackCopy(text, element);
+            }
+        }
+
+        function fallbackCopy(text, element) {
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                textarea.style.left = '-9999px';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                
+                textarea.select();
+                textarea.setSelectionRange(0, text.length);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (success) {
+                    showToast('Address copied!', element);
+                } else {
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    const tempDiv = document.createElement('div');
+                    tempDiv.textContent = text;
+                    tempDiv.style.position = 'fixed';
+                    tempDiv.style.opacity = '0';
+                    tempDiv.style.left = '-9999px';
+                    document.body.appendChild(tempDiv);
+                    
+                    range.selectNodeContents(tempDiv);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    
+                    const copied = document.execCommand('copy');
+                    document.body.removeChild(tempDiv);
+                    
+                    if (copied) {
+                        showToast('Address copied!', element);
+                    } else {
+                        showToast('Please copy manually', element);
+                    }
+                }
+            } catch (error) {
+                console.error('Copy failed:', error);
+                prompt('Copy this address:', text);
+            }
+        }
+
+        let toastTimeout = null;
+
+        function showToast(message, buttonElement) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            if (buttonElement) {
+                buttonElement.classList.add('copied');
+                const icon = buttonElement.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-check';
+                }
+            }
+            
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+            
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                if (buttonElement) {
+                    buttonElement.classList.remove('copied');
+                    const icon = buttonElement.querySelector('i');
+                    if (icon) {
+                        icon.className = 'far fa-copy';
+                    }
+                }
+            }, 2500);
+        }
+
+        async function fetchTokenData(address) {
+            if (!address || address.trim() === '') return null;
+            
+            try {
+                const url = `https://api.dexscreener.com/latest/dex/search?q=${address}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                if (!data.pairs || data.pairs.length === 0) {
+                    const shortAddr = address.slice(0, 14);
+                    const fallbackUrl = `https://api.dexscreener.com/latest/dex/search?q=${shortAddr}`;
+                    const fallbackRes = await fetch(fallbackUrl);
+                    if (!fallbackRes.ok) throw new Error(`Fallback HTTP ${fallbackRes.status}`);
+                    
+                    const fallbackData = await fallbackRes.json();
+                    if (!fallbackData.pairs || fallbackData.pairs.length === 0) {
+                        return null;
+                    }
+                    
+                    const matched = fallbackData.pairs.find(p => 
+                        p.pairAddress?.toLowerCase().includes(address.toLowerCase().slice(0, 10)) ||
+                        p.baseToken?.address?.toLowerCase().includes(address.toLowerCase().slice(0, 10))
+                    ) || fallbackData.pairs[0];
+                    
+                    return formatPairData(matched);
+                }
+                
+                const matched = data.pairs.find(p => 
+                    p.pairAddress?.toLowerCase() === address.toLowerCase() ||
+                    p.baseToken?.address?.toLowerCase() === address.toLowerCase()
+                ) || data.pairs[0];
+                
+                return formatPairData(matched);
+                
+            } catch (error) {
+                console.error(`Error fetching ${address}:`, error);
+                return null;
+            }
+        }
+
+        function formatPairData(pair) {
+            return {
+                name: pair.baseToken?.name || pair.baseToken?.symbol || 'Unknown',
+                symbol: pair.baseToken?.symbol || '???',
+                price: parseFloat(pair.priceUsd) || 0,
+                volume24h: pair.volume?.h24 ? formatNumber(pair.volume.h24) : null,
+                liquidity: pair.liquidity?.usd ? formatNumber(pair.liquidity.usd) : null,
+                change24h: pair.priceChange?.h24 || 0,
+                url: pair.url || null,
+                logo: pair.baseToken?.logoURI || pair.info?.imageUrl || null
+            };
+        }
+
+        function formatNumber(num) {
+            if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`;
+            if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`;
+            if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
+            return `$${num.toFixed(2)}`;
+        }
+
+        function getTokenImage(address, data) {
+            if (data?.logo) return data.logo;
+            if (address && address.length > 10) {
+                return `https://assets.trustwalletapp.com/blockchains/solana/assets/${address}/logo.png`;
+            }
+            return null;
+        }
+
+        function renderTokenCard(tokenData, index) {
+            const { address, data } = tokenData;
+            
+            if (!address || address.trim() === '' || !data) return '';
+            
+            const rank = index + 1;
+            const changeClass = data.change24h >= 0 ? 'up' : 'down';
+            const changeSymbol = data.change24h >= 0 ? '+' : '';
+            const changeValue = `${changeSymbol}${data.change24h.toFixed(1)}%`;
+            
+            const priceFormatted = data.price.toFixed(6);
+            const priceParts = priceFormatted.split('.');
+            const priceInt = priceParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const priceDec = priceParts[1] || '000000';
+            const priceValue = `$${priceInt}.${priceDec}`;
+            
+            const volumeValue = data.volume24h || '--';
+            const liquidityValue = data.liquidity || '--';
+            const tokenName = data.name || 'Unknown';
+            const tokenSymbol = data.symbol || '???';
+            
+            const imageUrl = getTokenImage(address, data);
+            const dexLink = data.url || `https://dexscreener.com/solana/${address}`;
+            
+            let avatarHtml = '';
+            if (imageUrl) {
+                avatarHtml = `<img src="${imageUrl}" alt="${tokenName}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\\'fallback-icon\\'>${tokenSymbol.charAt(0)}</span>'">`;
+            } else {
+                avatarHtml = `<span class="fallback-icon">${tokenSymbol.charAt(0) || '?'}</span>`;
+            }
+
+            const shortAddress = address.length > 20 ? address.slice(0, 10) + '...' + address.slice(-6) : address;
+
+            return `
+                <div class="token-card">
+                    <div class="token-avatar" style="background: linear-gradient(145deg, #1a2332, #0d1420);">
+                        ${avatarHtml}
+                        <span class="rank">#${rank}</span>
+                    </div>
+                    <div class="token-info">
+                        <div class="token-name-row">
+                            <span class="token-name">${tokenName}</span>
+                            <span class="token-symbol">${tokenSymbol}/SOL</span>
+                        </div>
+                        <div class="token-address-wrapper">
+                            <div class="token-address">
+                                <i class="fas fa-link"></i>
+                                <span>${shortAddress}</span>
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('${address}', this)" title="Copy address">
+                                <i class="far fa-copy"></i>
+                                <span class="copy-feedback">copied!</span>
+                            </button>
+                        </div>
+                        <div class="token-price">
+                            ${priceValue}
+                            <span class="price-usd">USD</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">24h Volume</span>
+                            <span class="stat-value">${volumeValue}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Change</span>
+                            <span class="stat-value change ${changeClass}">${changeValue}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Liquidity</span>
+                            <span class="stat-value">${liquidityValue}</span>
+                        </div>
+                    </div>
+                    <div class="token-action">
+                        <a href="${dexLink}" target="_blank">
+                            <span>DexScreener</span> <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function updateAllTokens() {
+            const container = document.getElementById('tokenContainer');
+            
+            container.innerHTML = `
+                <div class="loading-overlay">
+                    <i class="fas fa-spinner"></i>
+                    Fetching live data...
+                </div>
+            `;
+
+            try {
+                const validTokens = TOKENS.filter(t => t.address && t.address.trim() !== '');
+                
+                if (validTokens.length === 0) {
+                    container.innerHTML = `
+                        <div class="error-msg" style="text-align: center; padding: 30px; color: rgba(255,255,255,0.1);">
+                            <i class="fas fa-inbox" style="display: block; font-size: 32px; margin-bottom: 10px;"></i>
+                            No token addresses configured
+                            <br><small>Add addresses to the TOKENS array in the code</small>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const results = await Promise.all(
+                    validTokens.map(async (token, index) => {
+                        const data = await fetchTokenData(token.address);
+                        return { address: token.address, data, index };
+                    })
+                );
+
+                const now = new Date();
+                document.getElementById('updateTime').textContent = 
+                    `last update: ${now.toLocaleTimeString()}`;
+
+                let html = '<div class="token-list">';
+                let errorCount = 0;
+                let renderedCount = 0;
+
+                for (const result of results) {
+                    if (result.data) {
+                        html += renderTokenCard(result, renderedCount);
+                        renderedCount++;
+                    } else {
+                        errorCount++;
+                    }
+                }
+
+                html += '</div>';
+
+                if (renderedCount === 0) {
+                    html = `
+                        <div class="error-msg" style="text-align: center; padding: 30px;">
+                            <i class="fas fa-exclamation-triangle" style="display: block; font-size: 28px; margin-bottom: 10px;"></i>
+                            No valid tokens found
+                            <br><small>Check the addresses and try again</small>
+                        </div>
+                    `;
+                } else if (errorCount > 0) {
+                    html += `
+                        <div class="error-msg">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            ${errorCount} token(s) couldn't be loaded
+                            <small>Make sure the addresses are correct</small>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Fatal error:', error);
+                container.innerHTML = `
+                    <div class="error-msg">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load data
+                        <small>${error.message}</small>
+                    </div>
+                `;
+                setTimeout(updateAllTokens, 10000);
+            }
+        }
+
+        updateAllTokens();
+        setInterval(updateAllTokens, 20000);
+    </script>
+</body>
+</html>
