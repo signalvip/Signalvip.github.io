@@ -18,7 +18,7 @@
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background: #ffffff;
-            color: #ffffff;
+            color: #1a1a2e;
             min-height: 100vh;
             padding: 24px;
             position: relative;
@@ -26,22 +26,7 @@
         }
 
         body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(249, 115, 22, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 50%);
-            animation: bgFloat 25s ease-in-out infinite;
-            z-index: 0;
-        }
-
-        @keyframes bgFloat {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(2deg) scale(1.02); }
+            display: none;
         }
 
         .container {
@@ -145,7 +130,7 @@
             gap: 8px;
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(0, 0, 0, 0.3);
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
@@ -182,13 +167,13 @@
         .status-item .divider {
             width: 1px;
             height: 14px;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(0, 0, 0, 0.04);
         }
 
         .last-update {
             text-align: center;
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.08);
+            color: rgba(0, 0, 0, 0.08);
             letter-spacing: 1.5px;
             margin-top: 6px;
             font-weight: 400;
@@ -230,7 +215,7 @@
         .loading-overlay {
             text-align: center;
             padding: 50px 20px;
-            color: rgba(255, 255, 255, 0.15);
+            color: rgba(0, 0, 0, 0.15);
             font-size: 14px;
             font-weight: 500;
         }
@@ -627,7 +612,7 @@
         .footer {
             margin-top: 32px;
             padding-top: 28px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .footer-content {
@@ -651,14 +636,14 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 18px;
             font-weight: 700;
-            color: #fbbf24;
+            color: #1a1a2e;
             letter-spacing: 1px;
         }
 
         .footer-badge {
             font-size: 10px;
             font-weight: 600;
-            color: #34d399;
+            color: #065f46;
             background: rgba(52, 211, 153, 0.08);
             padding: 3px 14px;
             border-radius: 40px;
@@ -677,13 +662,13 @@
 
         .footer-text {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(0, 0, 0, 0.5);
             font-weight: 400;
             letter-spacing: 0.3px;
         }
 
         .footer-divider {
-            color: rgba(255, 255, 255, 0.1);
+            color: rgba(0, 0, 0, 0.1);
             font-size: 12px;
         }
 
@@ -701,9 +686,9 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            color: rgba(0, 0, 0, 0.3);
             font-size: 24px;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -722,10 +707,10 @@
         }
 
         .social-link.twitter:hover {
-            color: #1da1f2;
-            background: rgba(29, 161, 242, 0.06);
-            border-color: rgba(29, 161, 242, 0.15);
-            box-shadow: 0 0 30px rgba(29, 161, 242, 0.04);
+            color: #000000;
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.02);
         }
 
         .social-link.dextools:hover {
@@ -745,19 +730,19 @@
 
         .footer-powered {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(0, 0, 0, 0.4);
             letter-spacing: 0.5px;
             font-weight: 500;
         }
 
         .footer-powered span {
-            color: #fbbf24;
+            color: #f97316;
             font-weight: 600;
         }
 
         .footer-copyright {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(0, 0, 0, 0.6);
             letter-spacing: 0.5px;
             font-weight: 400;
         }
@@ -930,8 +915,10 @@
                     <a href="https://t.me/illuminati300" target="_blank" class="social-link telegram" title="Telegram">
                         <i class="fab fa-telegram-plane"></i>
                     </a>
-                    <a href="#" target="_blank" class="social-link twitter" title="Twitter/X">
-                        <i class="fab fa-twitter"></i>
+                    <a href="https://x.com/signalvipco" target="_blank" class="social-link twitter" title="Twitter/X">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display: block;">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
                     </a>
                     <a href="#" target="_blank" class="social-link dextools" title="DexScreener">
                         <i class="fas fa-chart-line"></i>
@@ -1214,7 +1201,7 @@
                 
                 if (validTokens.length === 0) {
                     container.innerHTML = `
-                        <div class="error-msg" style="text-align: center; padding: 30px; color: rgba(255,255,255,0.1);">
+                        <div class="error-msg" style="text-align: center; padding: 30px; color: rgba(0,0,0,0.1);">
                             <i class="fas fa-inbox" style="display: block; font-size: 32px; margin-bottom: 10px;"></i>
                             No token addresses configured
                             <br><small>Add addresses to the TOKENS array in the code</small>
