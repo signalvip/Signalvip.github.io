@@ -4,4 +4,4 @@ crypto signal vip
 
 🚀 https://x.com/signalvipco
 🚀 https://signalvip.github.io/
-👁️ t.me/miami_whale
+👁️ https://t.me/miami_whale
